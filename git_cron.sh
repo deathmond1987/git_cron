@@ -125,6 +125,7 @@ main () {
                          ;;
            -t|--time)    shift
                          UPDATE_TIME=$1
+                         ;;
            *)            echo "unknown arg: $1"
                          exit 1
                          ;;
