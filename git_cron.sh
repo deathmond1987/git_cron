@@ -32,7 +32,7 @@ install_service () {
        echo "script.sh -u YOUR_GITHUB_NAME"
        exit 1
    fi
-   get_script_dir
+   check_root
    if [ -f $systemd_timer_file ] ; then
       echo "systemd time already exits at $systemd_timer_file"
    else echo "[Unit]
@@ -70,21 +70,26 @@ WantedBy=multi-user.target" > $systemd_unit_file
 }
 
 remove_service () {
-   get_script_dir
-   systemctl disable --now $systemd_timer || true
-   systemctl disable --now $systemd_service || true
-   rm -f $systemd_timer_file || true
-   rm -f $systemd_unit_file || true
-   rm -f $script_dir/git_cron.sh || true
-   if [ -z "$(ls -A $script_dir)" ]; then
-       rm -rf $script_dir || true
-   else
-       echo "$script_dir not empty. refusing to delete folder"
-   fi
-   systemctl daemon-reload
+    check_root
+    systemctl disable --now $systemd_timer || true
+    systemctl disable --now $systemd_service || true
+    rm -f $systemd_timer_file || true
+    rm -f $systemd_unit_file || true
+    rm -f $script_dir/git_cron.sh || true
+    if [ -z "$(ls -A $script_dir)" ]; then
+        rm -rf $script_dir || true
+    else
+        echo "$script_dir not empty. refusing to delete folder"
+    fi
+    systemctl daemon-reload
 }
 
 get_github () {
+    if [ -z $GH_USER ]; then
+        echo "You need specify github username"
+        echo "script.sh -u YOUR_GITHUB_NAME"
+        exit 1
+    fi
     GH_USER=${GH_USER:=deathmond1987}
     PROJECT_LIST=$(curl https://api.github.com/users/$GH_USER/repos\?page\=1\&per_page\=100 | grep -e 'clone_url' | cut -d \" -f 4 | sed '/WSA/d' | xargs -L1)
     for project in ${PROJECT_LIST}; do
