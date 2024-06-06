@@ -44,7 +44,7 @@ install_service () {
        echo "script.sh -u YOUR_GITHUB_NAME"
        exit 1
    fi
-   check_root
+#   check_root
    UPDATE_TIME=${UPDATE_TIME:=2:00:00}
    if [ -f $systemd_timer_file ] ; then
       echo "systemd time already exits at $systemd_timer_file"
@@ -67,8 +67,8 @@ Description=git clone or pull if exist all projects from github
 Wants=$systemd_timer
 [Service]
 Type=oneshot
-User=$SUDO_USER
-Group=$SUDO_USER
+#User=$SUDO_USER
+#Group=$SUDO_USER
 WorkingDirectory=$script_dir
 ExecStart=$script_dir/git_cron.sh -u $GH_USER
 
@@ -90,7 +90,7 @@ WantedBy=multi-user.target" > $systemd_unit_file
 }
 
 remove_service () {
-    check_root
+#    check_root
     systemctl disable --now --user $systemd_timer || true
     systemctl disable --now --user $systemd_service || true
     rm -f $systemd_timer_file || true
