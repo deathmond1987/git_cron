@@ -46,6 +46,7 @@ install_service () {
    fi
 #   check_root
    UPDATE_TIME=${UPDATE_TIME:=2:00:00}
+   mkdir -p $systemd_config_path
    if [ -f $systemd_timer_file ] ; then
       echo "systemd time already exits at $systemd_timer_file"
    else echo "[Unit]
