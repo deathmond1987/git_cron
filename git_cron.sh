@@ -69,6 +69,9 @@ WantedBy=multi-user.target" > $systemd_unit_file
    systemctl daemon-reload
    systemctl enable --now $systemd_timer
    systemctl enable --now $systemd_service
+   systemctl status $systemd_timer
+   systemctl status $systemd_service
+   echo "Done"
 }
 
 remove_service () {
@@ -84,6 +87,7 @@ remove_service () {
         echo "$script_dir not empty. refusing to delete folder"
     fi
     systemctl daemon-reload
+    echo "Service removed"
 }
 
 get_github () {
