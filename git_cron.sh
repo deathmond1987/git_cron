@@ -11,11 +11,11 @@ set -e
 
 systemd_timer=git_cron.timer
 systemd_service=git_cron.service
-systemd_config_path=/home/"$SUDO_USER"/.config/systemd/user
+systemd_config_path=$HOME/.config/systemd/user
 #/etc/systemd/system
 systemd_timer_file=$systemd_config_path/$systemd_timer
 systemd_unit_file=$systemd_config_path/$systemd_service
-script_dir=/home/$SUDO_USER/.git_cron
+script_dir=$HOME/.git_cron
 
 help () {
   echo "  downloader for user github projects
