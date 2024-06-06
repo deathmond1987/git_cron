@@ -6,7 +6,7 @@ systemd_timer_file=/etc/systemd/system/$systemd_timer
 systemd_unit_file=/etc/systemd/system/$systemd_service
 
 help () {
-        echo "  downloader for user github projects
+  echo "  downloader for user github projects
   examples:
     $(basename $0) -u GITHUB_USER_NAME
   options :
@@ -84,44 +84,43 @@ remove_service () {
 }
 
 get_github () {
-        GH_USER=${GH_USER:=deathmond1987}
-        PROJECT_LIST=$(curl https://api.github.com/users/$GH_USER/repos\?page\=1\&per_page\=100 | grep -e 'clone_url' | cut -d \" -f 4 | sed '/WSA/d' | xargs -L1)
-
-        for project in ${PROJECT_LIST}; do
+    GH_USER=${GH_USER:=deathmond1987}
+    PROJECT_LIST=$(curl https://api.github.com/users/$GH_USER/repos\?page\=1\&per_page\=100 | grep -e 'clone_url' | cut -d \" -f 4 | sed '/WSA/d' | xargs -L1)
+    for project in ${PROJECT_LIST}; do
         project_name=$(echo "${project}" | cut -d'/' -f 5)
         if [ -d ./"${project_name//.git/}" ]; then
-                cd ./"${project_name//.git/}"
-                git pull
-                cd -
+            cd ./"${project_name//.git/}"
+            git pull
+            cd -
         else
-                git clone ${project}
+            git clone ${project}
         fi
-        done
+    done
 }
 
 main () {
-        while [ "$1" != "" ]; do
-                case "$1" in
-                -u|--user) shift
-                  GH_USER=$1
-                          ;;
-                -i|--install) install_service
-                              exit 0
-                          ;;
-                -r|--remove)  remove_service
-                              exit 0
-                          ;;
-            -h|--help)    help
-                          exit 0
-                          ;;
+    while [ "$1" != "" ]; do
+        case "$1" in
+           -u|--user)    shift
+                         GH_USER=$1
+                         ;;
+           -i|--install) install_service
+                         exit 0
+                         ;;
+           -r|--remove)  remove_service
+                         exit 0
+                         ;;
+           -h|--help)    help
+                         exit 0
+                         ;;
 
-                *)            echo "unknown arg: $1"
-                                  exit 1
-                          ;;
+           *)            echo "unknown arg: $1"
+                         exit 1
+                         ;;
         esac
         shift
-        done
-        get_github
+    done
+    get_github
 }
 
 main "$@"
