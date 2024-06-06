@@ -14,6 +14,7 @@ help () {
     -u/--user    -set username
     -i/--install -install script as service
     -r/--remove  -remove installed script
+    -t/--time    -set update time in install script. format: 2:00:00
     -h/--help    -help"
 }
 
@@ -33,13 +34,14 @@ install_service () {
        exit 1
    fi
    check_root
+   UPDATE_TIME=${UPDATE_TIME:=2:00:00}
    if [ -f $systemd_timer_file ] ; then
       echo "systemd time already exits at $systemd_timer_file"
    else echo "[Unit]
 Description=timer for git_cron.service
 
 [Timer]
-OnCalendar=*-*-* 2:00:00
+OnCalendar=*-*-* $UPDATE_TIME
 Persistent=true
 Unit=$systemd_service
 
@@ -121,7 +123,8 @@ main () {
            -h|--help)    help
                          exit 0
                          ;;
-
+           -t|--time)    shift
+                         UPDATE_TIME=$1
            *)            echo "unknown arg: $1"
                          exit 1
                          ;;
