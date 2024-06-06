@@ -125,7 +125,7 @@ get_github () {
         else
             git clone "${project}"
         fi
-        echo "[$project_name] done."
+        echo "[ $project_name ] done."
     done
 }
 
