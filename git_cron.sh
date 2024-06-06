@@ -121,7 +121,7 @@ get_github () {
         if [ -d ./"${project_name//.git/}" ]; then
             cd ./"${project_name//.git/}"
             git pull
-            cd -
+            cd - &>/dev/null
         else
             git clone "${project}"
         fi
