@@ -4,6 +4,7 @@ systemd_timer=git_cron.timer
 systemd_service=git_cron.service
 systemd_timer_file=/etc/systemd/system/$systemd_timer
 systemd_unit_file=/etc/systemd/system/$systemd_service
+script_dir=/home/$SUDO_USER/.git_cron
 
 help () {
   echo "  downloader for user github projects
@@ -16,9 +17,9 @@ help () {
     -h/--help    -help"
 }
 
-get_script_dir () {
+check_root () {
    if [ $EUID -eq 0 ]; then
-       script_dir=/home/$SUDO_USER/.git_cron
+       true
    else
        echo "root permissions needed"
        exit 1
