@@ -77,7 +77,7 @@ WantedBy=default.target" > $systemd_unit_file
    fi
 
    mkdir -p "$script_dir"
-   wget -O "$script_dir"/git_cron.sh https://raw.githubusercontent.com/deathmond1987/git_cron/main/git_cron.sh
+   wget -q -O "$script_dir"/git_cron.sh https://raw.githubusercontent.com/deathmond1987/git_cron/main/git_cron.sh
    chmod 770 "$script_dir"/git_cron.sh
    #chown "$SUDO_USER":"$SUDO_USER" -R "$script_dir"
    loginctl enable-linger "$USER"
