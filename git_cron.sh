@@ -11,7 +11,8 @@ set -e
 
 systemd_timer=git_cron.timer
 systemd_service=git_cron.service
-systemd_config_path=/etc/systemd/system
+systemd_config_path=/home/"$SUDO_USER"/.config/systemd/user
+#/etc/systemd/system
 systemd_timer_file=$systemd_config_path/$systemd_timer
 systemd_unit_file=$systemd_config_path/$systemd_service
 script_dir=/home/$SUDO_USER/.git_cron
@@ -77,11 +78,12 @@ WantedBy=multi-user.target" > $systemd_unit_file
 
    mkdir -p "$script_dir"
    wget -O "$script_dir"/git_cron.sh https://raw.githubusercontent.com/deathmond1987/git_cron/main/git_cron.sh
-   sudo chmod 770 "$script_dir"/git_cron.sh
-   chown "$SUDO_USER":"$SUDO_USER" -R "$script_dir"
+   chmod 770 "$script_dir"/git_cron.sh
+   #chown "$SUDO_USER":"$SUDO_USER" -R "$script_dir"
+   loginctl enable-linger "$SUDO_USER"
    systemctl daemon-reload
-   systemctl enable --now $systemd_timer
-   systemctl enable --now $systemd_service
+   systemctl enable --now --user $systemd_timer
+   systemctl enable --now --user $systemd_service
    systemctl status $systemd_timer
    systemctl status $systemd_service
    echo "Done"
@@ -89,8 +91,8 @@ WantedBy=multi-user.target" > $systemd_unit_file
 
 remove_service () {
     check_root
-    systemctl disable --now $systemd_timer || true
-    systemctl disable --now $systemd_service || true
+    systemctl disable --now --user $systemd_timer || true
+    systemctl disable --now --user $systemd_service || true
     rm -f $systemd_timer_file || true
     rm -f $systemd_unit_file || true
     rm -f "$script_dir"/git_cron.sh || true
