@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -xe
+set -e
 systemd_timer=git_cron.timer
 systemd_service=git_cron.service
 systemd_timer_file=/etc/systemd/system/$systemd_timer
