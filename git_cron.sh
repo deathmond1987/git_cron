@@ -2,8 +2,9 @@
 set -e
 systemd_timer=git_cron.timer
 systemd_service=git_cron.service
-systemd_timer_file=/etc/systemd/system/$systemd_timer
-systemd_unit_file=/etc/systemd/system/$systemd_service
+systemd_config_path=/etc/systemd/system
+systemd_timer_file=$systemd_config_path/$systemd_timer
+systemd_unit_file=$systemd_config_path/$systemd_service
 script_dir=/home/$SUDO_USER/.git_cron
 
 help () {
@@ -56,6 +57,8 @@ Description=git clone or pull if exist all projects from github
 Wants=$systemd_timer
 [Service]
 Type=oneshot
+User=$SUDO_USER
+Group=$SUDO_USER
 WorkingDirectory=$script_dir
 ExecStart=$script_dir/git_cron.sh -u $GH_USER
 
@@ -66,6 +69,7 @@ WantedBy=multi-user.target" > $systemd_unit_file
    mkdir -p $script_dir
    wget -O $script_dir/git_cron.sh https://raw.githubusercontent.com/deathmond1987/git_cron/main/git_cron.sh
    sudo chmod 770 $script_dir/git_cron.sh
+   chown $SUDO_USER:$SUDO_USER -R $script_dir
    systemctl daemon-reload
    systemctl enable --now $systemd_timer
    systemctl enable --now $systemd_service
