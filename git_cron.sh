@@ -5,6 +5,17 @@ systemd_service=git_cron.service
 systemd_timer_file=/etc/systemd/system/$systemd_timer
 systemd_unit_file=/etc/systemd/system/$systemd_service
 
+help () {
+        echo "  downloader for user github projects
+  examples:
+    $(basename $0) -u GITHUB_USER_NAME
+  options :
+    -u/--user    -set username
+    -i/--install -install script as service
+    -r/--remove  -remove installed script
+    -h/--help    -help"
+}
+
 get_script_dir () {
    if [ $EUID -eq 0 ]; then
        script_dir=/home/$SUDO_USER/.git_cron
@@ -59,17 +70,17 @@ WantedBy=multi-user.target" > $systemd_unit_file
 
 remove_service () {
    get_script_dir
-   sudo systemctl disable --now $systemd_timer || true
-   sudo systemctl disable --now $systemd_service || true
-   sudo rm -f $systemd_timer_file || true
-   sudo rm -f $systemd_unit_file || true
+   systemctl disable --now $systemd_timer || true
+   systemctl disable --now $systemd_service || true
+   rm -f $systemd_timer_file || true
+   rm -f $systemd_unit_file || true
    rm -f $script_dir/git_cron.sh || true
    if [ -z "$(ls -A $script_dir)" ]; then
        rm -rf $script_dir || true
    else
        echo "$script_dir not empty. refusing to delete folder"
    fi
-   sudo systemctl daemon-reload
+   systemctl daemon-reload
 }
 
 get_github () {
@@ -93,16 +104,20 @@ main () {
                 case "$1" in
                 -u|--user) shift
                   GH_USER=$1
-                  ;;
+                          ;;
                 -i|--install) install_service
                               exit 0
-                  ;;
-                -r|--remove) remove_service
-                             exit 0
-                  ;;
-                *) echo "unknown arg: $1"
-                            exit 1
-                  ;;
+                          ;;
+                -r|--remove)  remove_service
+                              exit 0
+                          ;;
+            -h|--help)    help
+                          exit 0
+                          ;;
+
+                *)            echo "unknown arg: $1"
+                                  exit 1
+                          ;;
         esac
         shift
         done
