@@ -85,8 +85,8 @@ WantedBy=default.target" > $systemd_unit_file
    systemctl daemon-reload --user
    systemctl enable --now --user $systemd_timer
    systemctl enable --now --user $systemd_service
-   systemctl status $systemd_timer
-   systemctl status $systemd_service
+   systemctl status --user $systemd_timer
+   systemctl status --user $systemd_service
    echo "Done"
 }
 
