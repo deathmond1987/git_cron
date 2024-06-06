@@ -82,7 +82,7 @@ WantedBy=default.target" > $systemd_unit_file
    chmod 770 "$script_dir"/git_cron.sh
    #chown "$SUDO_USER":"$SUDO_USER" -R "$script_dir"
    loginctl enable-linger "$USER"
-   systemctl daemon-reload
+   systemctl daemon-reload --user
    systemctl enable --now --user $systemd_timer
    systemctl enable --now --user $systemd_service
    systemctl status $systemd_timer
@@ -102,7 +102,7 @@ remove_service () {
     else
         echo "$script_dir not empty. refusing to delete folder"
     fi
-    systemctl daemon-reload
+    systemctl daemon-reload --user
     echo "Service removed"
 }
 
