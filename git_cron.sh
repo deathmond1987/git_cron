@@ -89,6 +89,7 @@ get_github () {
     PROJECT_LIST=$(curl https://api.github.com/users/$GH_USER/repos\?page\=1\&per_page\=100 | grep -e 'clone_url' | cut -d \" -f 4 | sed '/WSA/d' | xargs -L1)
     for project in ${PROJECT_LIST}; do
         project_name=$(echo "${project}" | cut -d'/' -f 5)
+        echo "$project_name start:"
         if [ -d ./"${project_name//.git/}" ]; then
             cd ./"${project_name//.git/}"
             git pull
@@ -96,6 +97,7 @@ get_github () {
         else
             git clone ${project}
         fi
+        echo "$project_name done."
     done
 }
 
