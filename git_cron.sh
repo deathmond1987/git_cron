@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 set -e
+
+## to do:
+## unit fully works in userland
+## no root need
+## set unit dir to ~/.config/systemd/user
+## set loginctl enable-linger $SUDO_USER to enable user services loading
+## specify systemctl enable --now --user
+
+
 systemd_timer=git_cron.timer
 systemd_service=git_cron.service
 systemd_config_path=/etc/systemd/system
