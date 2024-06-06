@@ -54,6 +54,7 @@ WantedBy=multi-user.target" > $systemd_unit_file
    sudo chmod 770 $script_dir/git_cron.sh
    systemctl daemon-reload
    systemctl enable --now $systemd_timer
+   systemctl enable --now $systemd_service
 }
 
 remove_service () {
