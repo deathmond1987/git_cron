@@ -73,14 +73,14 @@ WorkingDirectory=$script_dir
 ExecStart=$script_dir/git_cron.sh -u $GH_USER
 
 [Install]
-WantedBy=multi-user.target" > $systemd_unit_file
+WantedBy=default.target" > $systemd_unit_file
    fi
 
    mkdir -p "$script_dir"
    wget -O "$script_dir"/git_cron.sh https://raw.githubusercontent.com/deathmond1987/git_cron/main/git_cron.sh
    chmod 770 "$script_dir"/git_cron.sh
    #chown "$SUDO_USER":"$SUDO_USER" -R "$script_dir"
-   loginctl enable-linger "$SUDO_USER"
+   loginctl enable-linger "$USER"
    systemctl daemon-reload
    systemctl enable --now --user $systemd_timer
    systemctl enable --now --user $systemd_service
