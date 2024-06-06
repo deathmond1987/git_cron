@@ -38,7 +38,7 @@ check_root () {
 }
 
 install_service () {
-   if [ -z $GH_USER ]; then
+   if [ -z "$GH_USER" ]; then
        echo "You need specify github username"
        echo "script.sh -u YOUR_GITHUB_NAME"
        exit 1
@@ -75,10 +75,10 @@ ExecStart=$script_dir/git_cron.sh -u $GH_USER
 WantedBy=multi-user.target" > $systemd_unit_file
    fi
 
-   mkdir -p $script_dir
-   wget -O $script_dir/git_cron.sh https://raw.githubusercontent.com/deathmond1987/git_cron/main/git_cron.sh
-   sudo chmod 770 $script_dir/git_cron.sh
-   chown $SUDO_USER:$SUDO_USER -R $script_dir
+   mkdir -p "$script_dir"
+   wget -O "$script_dir"/git_cron.sh https://raw.githubusercontent.com/deathmond1987/git_cron/main/git_cron.sh
+   sudo chmod 770 "$script_dir"/git_cron.sh
+   chown "$SUDO_USER":"$SUDO_USER" -R "$script_dir"
    systemctl daemon-reload
    systemctl enable --now $systemd_timer
    systemctl enable --now $systemd_service
@@ -93,9 +93,9 @@ remove_service () {
     systemctl disable --now $systemd_service || true
     rm -f $systemd_timer_file || true
     rm -f $systemd_unit_file || true
-    rm -f $script_dir/git_cron.sh || true
-    if [ -z "$(ls -A $script_dir)" ]; then
-        rm -rf $script_dir || true
+    rm -f "$script_dir"/git_cron.sh || true
+    if [ -z "$(ls -A "$script_dir")" ]; then
+        rm -rf "$script_dir" || true
     else
         echo "$script_dir not empty. refusing to delete folder"
     fi
@@ -104,13 +104,14 @@ remove_service () {
 }
 
 get_github () {
-    if [ -z $GH_USER ]; then
+    if [ -z "$GH_USER" ]; then
         echo "You need specify github username"
         echo "script.sh -u YOUR_GITHUB_NAME"
         exit 1
     fi
     GH_USER=${GH_USER:=deathmond1987}
-    PROJECT_LIST=$(curl https://api.github.com/users/$GH_USER/repos\?page\=1\&per_page\=100 | grep -e 'clone_url' | cut -d \" -f 4 | sed '/WSA/d' | xargs -L1)
+    # shellcheck disable=SC1001
+    PROJECT_LIST=$(curl https://api.github.com/users/"$GH_USER"/repos\?page\=1\&per_page\=100 | grep -e 'clone_url' | cut -d \" -f 4 | sed '/WSA/d' | xargs -L1)
     for project in ${PROJECT_LIST}; do
         project_name=$(echo "${project}" | cut -d'/' -f 5)
         echo "[$project_name] start:"
@@ -119,7 +120,7 @@ get_github () {
             git pull
             cd -
         else
-            git clone ${project}
+            git clone "${project}"
         fi
         echo "[$project_name] done."
     done
