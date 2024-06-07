@@ -33,8 +33,7 @@ check_root () {
    if [ "$EUID" -eq 0 ]; then
        echo "Refusing run script from root user"
        exit 1
-   else
-
+  fi
 }
 
 install_service () {
