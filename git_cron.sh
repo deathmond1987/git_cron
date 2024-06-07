@@ -30,12 +30,11 @@ help () {
 }
 
 check_root () {
-   if [ $EUID -eq 0 ]; then
-       true
-   else
-       echo "root permissions needed"
+   if [ "$EUID" -eq 0 ]; then
+       echo "Refusing run script from root user"
        exit 1
-   fi
+   else
+
 }
 
 install_service () {
@@ -44,7 +43,7 @@ install_service () {
        echo "script.sh -u YOUR_GITHUB_NAME"
        exit 1
    fi
-#   check_root
+   check_root
    UPDATE_TIME=${UPDATE_TIME:=2:00:00}
    mkdir -p $systemd_config_path
    if [ -f $systemd_timer_file ] ; then
@@ -91,7 +90,7 @@ WantedBy=default.target" > $systemd_unit_file
 }
 
 remove_service () {
-#    check_root
+    check_root
     systemctl disable --now --user $systemd_timer || true
     systemctl disable --now --user $systemd_service || true
     rm -f $systemd_timer_file || true
