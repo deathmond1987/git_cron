@@ -131,6 +131,9 @@ main () {
     ## глупость. сначала надо разобрать все аргументы а потом уже вызывать функции. иначе аргументы проглатываются
     while [ "$1" != "" ]; do
         case "$1" in
+           -t|--time)    shift
+                         UPDATE_TIME=$1
+                         ;;
            -u|--user)    shift
                          GH_USER=$1
                          ;;
@@ -142,9 +145,6 @@ main () {
                          ;;
            -h|--help)    help
                          exit 0
-                         ;;
-           -t|--time)    shift
-                         UPDATE_TIME=$1
                          ;;
            *)            echo "unknown arg: $1"
                          exit 1
