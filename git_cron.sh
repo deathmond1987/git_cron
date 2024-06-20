@@ -32,7 +32,7 @@ help () {
 check_root () {
    if [ "$EUID" -eq 0 ]; then
        . /etc/environment
-       if [ -z ${WITH_CONFIG+x} ]; then
+       if [ ! -z ${WITH_CONFIG+x} ]; then
            echo "detected custom install variable. Proceed..."
        else 
            echo "Refusing run script from root user"
