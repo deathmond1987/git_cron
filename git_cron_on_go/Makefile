@@ -8,7 +8,7 @@ all: mod-init mod-tidy cross-compile
 
 mod-init:
         @if [ ! -f go.mod ]; then \
-         go mod init $(MODULE_NAME); \
+        go mod init $(MODULE_NAME); \
         fi
 
 mod-tidy:
