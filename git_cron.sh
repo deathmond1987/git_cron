@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-set -x
+#set -x
 ## to do:
 ## unit fully works in userland
 ## no root need
